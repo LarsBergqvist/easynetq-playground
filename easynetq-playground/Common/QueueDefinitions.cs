@@ -2,5 +2,6 @@ namespace Common;
 
 public static class QueueDefinitions
 {
-    public static string Queue1 = "my.queue";
+    public static readonly string Queue1 = "my.queue1";
+    public static readonly string RequestQueue = "my.request.queue";
 }
