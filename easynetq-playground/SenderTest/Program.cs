@@ -2,7 +2,7 @@
 using EasyNetQ;
 using Messages;
 
-namespace Sender 
+namespace SenderTest 
 {
     static class Program 
     {

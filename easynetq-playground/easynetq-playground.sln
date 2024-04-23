@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdditionalSubscriber", "AdditionalSubscriber\AdditionalSubscriber.csproj", "{9BC30F8E-8DF6-4EDA-949C-548F4909C519}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sender", "Sender\Sender.csproj", "{6087E59C-20D1-49F8-AEB3-56820E7D80BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SenderTest", "SenderTest\SenderTest.csproj", "{6087E59C-20D1-49F8-AEB3-56820E7D80BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver", "Receiver\Receiver.csproj", "{4321116E-5E33-4A2D-9E5B-118FBB795478}"
 EndProject
