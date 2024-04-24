@@ -5,32 +5,25 @@ using Microsoft.Extensions.Options;
 
 namespace MessageListener;
 
-public class Listener
+public class Listener(ILogger<Listener> logger, RabbitMqSettings settings) : IListener
 {
-    private readonly ILogger<Listener> _logger;
-    private readonly RabbitMqSettings _settings;
     private SelfHostedBus? _bus;
-    public Listener(ILogger<Listener> logger, IOptions<RabbitMqSettings> options)
-    {
-        _logger = logger;
-        _settings = options.Value;
-    }
-    
+
     public void Start()
     {
-        _bus = new BusFactory().CreateBus(_settings);
+        _bus = new BusFactory().CreateBus(settings);
         var advancedBus = _bus.Advanced;
-        var queue = advancedBus.QueueDeclare(_settings.QueueName);
-        _logger.LogInformation("Consumer listening on queue '{QUEUE}", queue.Name);
+        var queue = advancedBus.QueueDeclare(settings.QueueName);
+        logger.LogInformation("Consumer listening on queue '{QUEUE}", queue.Name);
         advancedBus.Consume(queue, (body, properties, info) => Task.Factory.StartNew(() =>
         {
             var message = Encoding.UTF8.GetString(body.Span);
-            _logger.LogInformation("Got message: '{MESSAGE}'", message);
-            _logger.LogInformation("Info: '{INFO}'", info.ToString());
-            _logger.LogInformation("Properties: '{PROPS}'", properties.ToString());
+            logger.LogInformation("Got message: '{MESSAGE}'", message);
+            logger.LogInformation("Info: '{INFO}'", info.ToString());
+            logger.LogInformation("Properties: '{PROPS}'", properties.ToString());
         }));
 
-        _logger.LogInformation("Listener started");
+        logger.LogInformation("Listener started");
     }
     
     public void Stop()
@@ -39,6 +32,6 @@ public class Listener
         {
             _bus.Dispose();
         }
-        _logger.LogInformation("Listener stopped");
+        logger.LogInformation("Listener stopped");
     }
 }

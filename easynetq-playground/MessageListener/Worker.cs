@@ -1,14 +1,18 @@
+using Common;
+using Microsoft.Extensions.Options;
+
 namespace MessageListener;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
-    private readonly Listener _listener;
+//    private readonly ILogger<Worker> _logger;
+    private readonly IServiceProvider _services;
+    private ListenerCollection _listenerCollection;
 
-    public Worker(ILogger<Worker> logger, Listener listener)
+    public Worker(IServiceProvider services)
     {
-        _logger = logger;
-        _listener = listener;
+//        _logger = logger;
+        _services = services;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -21,13 +25,26 @@ public class Worker : BackgroundService
 
     public override async Task StartAsync(CancellationToken cancellationToken)
     {
-        _listener.Start();
+        var logger = _services.GetRequiredService<ILogger<Listener>>();
+        var settings = _services.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+        _listenerCollection = new ListenerCollection(new List<IListener> 
+            { new Listener(logger, settings), new Listener(logger, settings) });
+
+        foreach (var listener in _listenerCollection.Listeners)
+        {
+            listener.Start();
+        }
+
+
         await base.StartAsync(cancellationToken);
     }
     
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
-        _listener.Stop();
+        foreach (var listener in _listenerCollection.Listeners)
+        {
+            listener.Start();
+        }
         await base.StopAsync(cancellationToken);
     }
 }
