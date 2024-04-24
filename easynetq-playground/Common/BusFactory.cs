@@ -9,9 +9,10 @@ public class BusFactory
         return RabbitHutch.CreateBus("host=localhost");
     }
     
-    public IAdvancedBus CreateAdvancedBus()
+    // CreateBus from with a generated connection using RabbitMqSettings    
+    public SelfHostedBus CreateBus(RabbitMqSettings settings)
     {
-        return RabbitHutch.CreateBus("host=localhost").Advanced;
+        return RabbitHutch.CreateBus($"host={settings.Host};username={settings.UserName};password={settings.Password}");
     }
 
 }
